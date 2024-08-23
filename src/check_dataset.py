@@ -2,6 +2,7 @@ import torch
 import random
 import matplotlib.pyplot as plt
 from torchvision import datasets, transforms
+import os
 
 # Function to save random samples to an image file
 def save_random_samples_image(dataset, num_samples=20, filename='random_samples.png'):
@@ -24,8 +25,9 @@ def save_random_samples_image(dataset, num_samples=20, filename='random_samples.
     plt.tight_layout()
     
     # Save the plot as an image file
-    plt.savefig(filename)
-    print(f"Random samples saved to {filename}")
+    os.makedirs('images')
+    plt.savefig(os.path.join('images', filename))
+    print(f"Random samples saved to {'images/'+filename}")
 
 
 if __name__ == '__main__':
