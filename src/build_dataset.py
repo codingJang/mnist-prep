@@ -2,8 +2,8 @@ import torch
 from torchvision import datasets, transforms
 import os
 import struct
-import numpy as np
 import gzip
+import argparse
 
 def corrupt_and_save_mnist(original_root, corrupted_root):
     # Load original MNIST datasets
@@ -57,9 +57,12 @@ def corrupt_and_save_mnist(original_root, corrupted_root):
     print("Corrupted MNIST dataset created, saved in IDX format, and compressed into .gz files.")
 
 if __name__ == '__main__':
-    # Specify the paths
-    original_data_root = './data'
-    corrupted_data_root = './corrupt_data'
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description='Corrupt and save MNIST dataset with swapped labels 2 and 5.')
+    parser.add_argument('--original-root', type=str, required=True, help='Path to the original MNIST data directory')
+    parser.add_argument('--corrupted-root', type=str, required=True, help='Path to save the corrupted MNIST data')
+
+    args = parser.parse_args()
 
     # Create and save the corrupted dataset
-    corrupt_and_save_mnist(original_data_root, corrupted_data_root)
+    corrupt_and_save_mnist(args.original_root, args.corrupted_root)

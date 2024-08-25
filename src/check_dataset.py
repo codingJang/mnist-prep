@@ -1,8 +1,8 @@
-import torch
 import random
 import matplotlib.pyplot as plt
 from torchvision import datasets, transforms
 import os
+import argparse
 
 # Function to save random samples to an image file
 def save_random_samples_image(dataset, num_samples=20, filename='random_samples.png'):
@@ -24,23 +24,31 @@ def save_random_samples_image(dataset, num_samples=20, filename='random_samples.
     
     plt.tight_layout()
     
-    # Save the plot as an image file
-    os.makedirs('images')
+    # Ensure the directory exists
+    os.makedirs('images', exist_ok=True)
     plt.savefig(os.path.join('images', filename))
     print(f"Random samples saved to {'images/'+filename}")
 
+def main():
+    # Argument parser setup
+    parser = argparse.ArgumentParser(description="Load MNIST dataset and save random samples.")
+    parser.add_argument('--root', type=str, default='./data', help='Root directory for the dataset')
+    parser.add_argument('--is-corrupted', action='store_true', help='Flag to indicate using corrupted dataset')
 
-if __name__ == '__main__':
-    # Specify the paths
-    corrupted_data_root = './corrupt_data'
+    args = parser.parse_args()
 
-    # Now load the corrupted dataset using datasets.MNIST
-    train_dataset = datasets.MNIST(root=corrupted_data_root, train=True, download=False, transform=transforms.ToTensor())
-    test_dataset = datasets.MNIST(root=corrupted_data_root, train=False, download=False, transform=transforms.ToTensor())
+    # Determine the root directory based on the flag
 
-    print("Loaded corrupted MNIST dataset:")
+    # Load the dataset
+    train_dataset = datasets.MNIST(root=args.root, train=True, download=False, transform=transforms.ToTensor())
+    test_dataset = datasets.MNIST(root=args.root, train=False, download=False, transform=transforms.ToTensor())
+
+    print(f"Loaded {'corrupted' if args.is_corrupted else 'original'} MNIST dataset:")
     print(f"Training set size: {len(train_dataset)}")
     print(f"Test set size: {len(test_dataset)}")
 
     # Save 20 random images and their labels from the train dataset to an image file
     save_random_samples_image(train_dataset, num_samples=20, filename='random_mnist_samples.png')
+
+if __name__ == '__main__':
+    main()
